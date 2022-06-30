@@ -1,13 +1,18 @@
 package com.example.github
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.github.WebApi.Companion.downloadFile
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -44,6 +49,16 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
                     textView = findViewById(R.id.user_location)
                     textView.text = it.location
+
+                    val dir = baseContext.filesDir
+                    val imgFile = File(dir, "Avatar.png")
+                    WebApi.downloadFile(it.avatarUrl, imgFile)
+
+                    if (imgFile.exists()) {
+                        val bitmap: Bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
+                        val imageView: ImageView = findViewById(R.id.user_image)
+                        imageView.setImageBitmap(bitmap)
+                    }
 
                 }
             }
