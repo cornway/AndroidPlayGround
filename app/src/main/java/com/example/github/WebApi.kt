@@ -11,27 +11,8 @@ import java.io.IOException
 
 class WebApi {
     companion object {
-        fun downloadFile(url: String, path: File) {
-            val api = GithubApi.create().getAvatar(url)
 
-            api.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    if (response.isSuccessful) {
-                        writeResponseToDisk(response.body(), path)
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-
-            })
-        }
-
-        fun writeResponseToDisk(responseBody: ResponseBody?, file: File) {
+        private fun writeResponseToDisk(responseBody: ResponseBody?, file: File) {
             responseBody?.let {
                 var byteArray: ByteArray = ByteArray(4096);
                 var bytestream = it.byteStream()

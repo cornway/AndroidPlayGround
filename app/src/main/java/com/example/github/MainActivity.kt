@@ -7,8 +7,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.github.WebApi.Companion.downloadFile
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,58 +21,52 @@ import java.io.File
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: ViewAdapter
 
-    override fun onRefresh() {
-        val apiInterface = GithubApi.create().getFollowers("cornway")
+    private fun requestInfo(userName: String) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val githubApi = GithubApi.create().create(GithubApi::class.java)
 
-        apiInterface.enqueue( object : Callback<List<Followers>>{
-            override fun onResponse(
-                call: Call<List<Followers>>,
-                response: Response<List<Followers>>
-            ) {
+            val result = githubApi.getUserInfo(userName)
+            result.let {
+                val userInfo = it.body()
 
-                response.body()?.forEach {
-                    Log.d("onResponse; login:", it.login)
-                }
-            }
-
-            override fun onFailure(call: Call<List<Followers>>, t: Throwable) {
-                Log.d("onFailure", "Failed")
-            }
-        })
-
-        val apiGetUser = GithubApi.create().getUserInfo("cornway")
-
-        apiGetUser.enqueue(object : Callback<UserInfo>{
-            override fun onResponse(
-                call: Call<UserInfo>,
-                response: Response<UserInfo>
-            ) {
-                response.body()?.let {
+                userInfo?.let {
                     var textView: TextView = findViewById(R.id.user_name)
-                    textView.text = it.login
+                    textView.text = userInfo.login
 
                     textView = findViewById(R.id.user_location)
-                    textView.text = it.location
+                    textView.text = userInfo.location
 
-                    val dir = baseContext.filesDir
-                    val imgFile = File(dir, "Avatar.png")
-                    WebApi.downloadFile(it.avatarUrl, imgFile)
-
-                    if (imgFile.exists()) {
-                        val bitmap: Bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-                        val imageView: ImageView = findViewById(R.id.user_image)
-                        imageView.setImageBitmap(bitmap)
-                    }
-
+                    val imageView: ImageView = findViewById(R.id.user_image)
+                    Glide.with(imageView)
+                        .load(userInfo.avatarUrl)
+                        .into(imageView)
                 }
             }
+        }
+    }
 
-            override fun onFailure(call: Call<UserInfo>, t: Throwable) {
-                TODO("Not yet implemented")
+    private fun requestRepos(userName: String) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val githubApi = GithubApi.create().create(GithubApi::class.java)
+
+            val result = githubApi.getUserRepos(userName)
+            val userRepos = result.body()
+            val list = viewAdapter.dataSet
+            userRepos?.let {
+                userRepos.forEach {
+                    list.add(ViewElement(it.name, it.url))
+                }
             }
+            viewAdapter.notifyDataSetChanged()
+        }
+    }
 
-        })
+    override fun onRefresh() {
+        requestInfo("cornway")
+        requestRepos("cornway")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +75,10 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
         swipeRefreshLayout =  findViewById(R.id.swipe_refresh)
         swipeRefreshLayout.setOnRefreshListener(this)
+
+        recyclerView = findViewById(R.id.recycler_view)
+        viewAdapter = ViewAdapter()
+        recyclerView.adapter = viewAdapter
 
     }
 }
