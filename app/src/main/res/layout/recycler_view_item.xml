@@ -14,6 +14,7 @@
         android:id="@+id/view_user_repo_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autoLink="web"
         android:textColor="@color/color_red"></TextView>
 
 
