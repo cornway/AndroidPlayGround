@@ -18,9 +18,6 @@ interface GithubApi {
     @GET("users/{user}/repos")
     suspend fun getUserRepos(@Path("user") url: String) : Response<Array<UserRepos>>
 
-    @GET("users/{user}")
-    suspend fun getUserFollowers(@Path("user") url: String) : Response<Array<Followers>>
-
     companion object {
         var BASE_URL = "https://api.github.com/"
 

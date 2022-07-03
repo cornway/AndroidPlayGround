@@ -33,7 +33,7 @@ class Worker (var lifecycleScope: LifecycleCoroutineScope, val activity: MainAct
             userReposInfo.clear()
             userRepos?.let {
                 userRepos.forEach {
-                    userReposInfo.add(UserReposInfo(it.name, it.url))
+                    userReposInfo.add(UserReposInfo(it.name?:"Not Found", it.url?:"Not Found"))
                 }
             }
 
