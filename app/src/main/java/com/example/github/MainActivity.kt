@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,53 +24,36 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: ViewAdapter
-
-    private fun requestInfo(userName: String) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val githubApi = GithubApi.create().create(GithubApi::class.java)
-
-            val result = githubApi.getUserInfo(userName)
-            result.let {
-                val userInfo = it.body()
-
-                userInfo?.let {
-                    var textView: TextView = findViewById(R.id.user_name)
-                    textView.text = userInfo.login
-
-                    textView = findViewById(R.id.user_location)
-                    textView.text = userInfo.location
-
-                    val imageView: ImageView = findViewById(R.id.user_image)
-                    Glide.with(imageView)
-                        .load(userInfo.avatarUrl)
-                        .into(imageView)
-                }
-            }
-        }
-    }
-
-    private fun requestRepos(userName: String) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val githubApi = GithubApi.create().create(GithubApi::class.java)
-
-            val result = githubApi.getUserRepos(userName)
-            val userRepos = result.body()
-            val list = viewAdapter.dataSet
-            userRepos?.let {
-                userRepos.forEach {
-                    list.add(ViewElement(it.name, it.url))
-                }
-            }
-            viewAdapter.notifyDataSetChanged()
-        }
-    }
+    private var worker: Worker? = null;
 
     override fun onRefresh() {
-        requestInfo("cornway")
-        requestRepos("cornway")
+        worker?.requestInfo("cornway")
+    }
+
+    fun notifyDataUpdated(userInfo: UserInfo?, userRepos: MutableList<Worker.UserReposInfo>) {
+        userInfo?.let {
+            var textView: TextView = findViewById(R.id.user_name)
+            textView.text = userInfo.login
+
+            textView = findViewById(R.id.user_location)
+            textView.text = userInfo.location
+
+            val imageView: ImageView = findViewById(R.id.user_image)
+            Glide.with(imageView)
+                .load(userInfo.avatarUrl)
+                .into(imageView)
+        }
+
+        viewAdapter.dataSet.clear()
+        userRepos.forEach() {
+            viewAdapter.dataSet.add(ViewElement(it.name, it.url))
+        }
+        viewAdapter.notifyDataSetChanged()
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -79,6 +63,8 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView = findViewById(R.id.recycler_view)
         viewAdapter = ViewAdapter()
         recyclerView.adapter = viewAdapter
+
+        worker = Worker(lifecycleScope, this)
 
     }
 }
