@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -31,32 +32,32 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
 
         worker = Worker(lifecycleScope, this)
 
-        worker?.requestRepositories(0)
+        worker?.requestRepositories(viewAdapter.dataSet.size)
+
+        recyclerView.setOnScrollChangeListener(object : View.OnScrollChangeListener {
+            override fun onScrollChange(
+                v: View?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                val index = (recyclerView.layoutManager as? LinearLayoutManager)?.findFirstCompletelyVisibleItemPosition()?:0
+                if (viewAdapter.dataSet.size - 60 < index) {
+                    worker?.requestRepositories(viewAdapter.dataSet.size)
+                }
+
+            }
+        })
 
     }
 
     override fun notifyReposUpdated(repos: MutableList<Repositories>) {
-        var start = viewAdapter.dataSet.size
-        repos.forEach {
-            var bitmap: Bitmap? = null
-
-            Glide.with(this)
-                .asBitmap()
-                .load(it.owner?.avatarUrl)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        bitmap = resource
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-
-                })
-
-            viewAdapter.dataSet.add(start++, RepoViewElement(it.fullName?:"Not Found", bitmap))
+        val list = repos.map {
+            RepoViewElement(it.name?:"Not Found", it.owner?.avatarUrl)
+        }
+        with(viewAdapter.dataSet) {
+            addAll(size, list)
         }
         viewAdapter.notifyDataSetChanged()
     }

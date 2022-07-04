@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.github.R
 
 class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
@@ -30,7 +31,11 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nameView?.text = dataSet[position].name
-        holder.avatarView?.setImageBitmap(dataSet[position].avatar)
+        holder.avatarView?.let {
+            Glide.with(it)
+                .load(dataSet[position].avatarUrl)
+                .into(it)
+        }
     }
 
     override fun getItemCount(): Int {

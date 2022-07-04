@@ -4,5 +4,5 @@ import android.graphics.Bitmap
 
 data class RepoViewElement(
     val name: String,
-    val avatar: Bitmap?
+    val avatarUrl: String?
 )

@@ -41,7 +41,6 @@ class Worker (var lifecycleScope: LifecycleCoroutineScope, val workerInterface: 
 
             val repos = githubApi.getRepos(since.toString())
 
-            reposInfo.clear()
             repos?.body()?.let {
                 it.forEach { repo ->
                     reposInfo.add(repo)
