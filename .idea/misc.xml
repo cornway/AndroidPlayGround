@@ -5,6 +5,11 @@
       <map>
         <entry key="..\:/myWork/AndroidPlayGround/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/myWork/AndroidPlayGround/app/src/main/res/layout/recycler_view_item.xml" value="0.133984375" />
+        <entry key="..\:/myWork/AndroidPlayGround/mainapp/src/main/res/layout/activity_repo.xml" value="0.1796875" />
+        <entry key="..\:/myWork/AndroidPlayGround/reposapp/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/myWork/AndroidPlayGround/reposapp/src/main/res/layout/activity_repos.xml" value="0.1" />
+        <entry key="..\:/myWork/AndroidPlayGround/reposapp/src/main/res/layout/actvity_repos.xml" value="0.1" />
+        <entry key="..\:/myWork/AndroidPlayGround/reposapp/src/main/res/layout/repos_activity.xml" value="0.1" />
       </map>
     </option>
   </component>
