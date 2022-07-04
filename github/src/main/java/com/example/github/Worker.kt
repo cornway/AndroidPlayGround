@@ -6,49 +6,45 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.sin
 
-class Worker (var lifecycleScope: LifecycleCoroutineScope, val workerInterface: WorkerInterface) {
+class Worker (private val workerInterface: WorkerInterface) {
 
-    fun requestInfo(userName: String) {
-            lifecycleScope.launch(Dispatchers.Main) {
-            val githubApi = GithubApi.create().create(GithubApi::class.java)
-            var userInfo: UserInfo? = null
-            var userReposInfo: MutableList<UserReposInfo> = mutableListOf()
+    suspend fun requestInfo(userName: String) {
+        val githubApi = GithubApi.create().create(GithubApi::class.java)
+        var userInfo: UserInfo? = null
+        var userReposInfo: MutableList<UserReposInfo> = mutableListOf()
 
-            val resultUser = githubApi.getUserInfo(userName)
-            resultUser.let {
-                userInfo = it.body()
-            }
-
-            val resultRepos = githubApi.getUserRepos(userName)
-            val userRepos = resultRepos.body()
-
-            userReposInfo.clear()
-            userRepos?.let {
-                userRepos.forEach {
-                    userReposInfo.add(UserReposInfo(it.name?:"Not Found", it.url?:"Not Found"))
-                }
-            }
-
-            workerInterface.notifyDataUpdated(userInfo, userReposInfo)
+        val resultUser = githubApi.getUserInfo(userName)
+        resultUser.let {
+            userInfo = it.body()
         }
+
+        val resultRepos = githubApi.getUserRepos(userName)
+        val userRepos = resultRepos.body()
+
+        userReposInfo.clear()
+        userRepos?.let {
+            userRepos.forEach {
+                userReposInfo.add(UserReposInfo(it.name?:"Not Found", it.url?:"Not Found"))
+            }
+        }
+
+        workerInterface.notifyDataUpdated(userInfo, userReposInfo)
     }
 
-    fun requestRepositories(since: Int) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val githubApi = GithubApi.create().create(GithubApi::class.java)
+    suspend fun requestRepositories(since: Int) {
+        val githubApi = GithubApi.create().create(GithubApi::class.java)
 
-            val reposInfo: MutableList<Repositories> = mutableListOf()
+        val reposInfo: MutableList<Repositories> = mutableListOf()
 
-            val repos = githubApi.getRepos(since.toString())
+        val repos = githubApi.getRepos(since.toString())
 
-            repos?.body()?.let {
-                it.forEach { repo ->
-                    reposInfo.add(repo)
-                }
+        repos?.body()?.let {
+            it.forEach { repo ->
+                reposInfo.add(repo)
             }
-
-            workerInterface.notifyReposUpdated(reposInfo)
         }
+
+        workerInterface.notifyReposUpdated(reposInfo)
     }
 
 }

@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.github.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
@@ -28,8 +30,10 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     private fun requestInfo() {
         worker?.let {
-            swipeRefreshLayout.isRefreshing
-            it.requestInfo(userName)
+            swipeRefreshLayout.isRefreshing = true
+            lifecycleScope.launch(Dispatchers.Main) {
+                it.requestInfo(userName)
+            }
         }
     }
 
@@ -38,7 +42,7 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     override fun onRefresh() {
-        worker?.requestInfo(userName)
+        requestInfo()
     }
 
     override fun notifyDataUpdated(userInfo: UserInfo?, userRepos: MutableList<UserReposInfo>) {
@@ -89,7 +93,7 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         viewAdapter = ViewAdapter()
         recyclerView.adapter = viewAdapter
 
-        worker = Worker(lifecycleScope, this)
+        worker = Worker(this)
 
         userName = intent.data.toString()
 

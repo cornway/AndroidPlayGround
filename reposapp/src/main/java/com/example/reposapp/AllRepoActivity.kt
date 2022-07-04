@@ -15,11 +15,26 @@ import com.example.example.Repositories
 import com.example.github.R
 import com.example.github.Worker
 import com.example.github.WorkerInterface
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AllRepoActivity : AppCompatActivity(), WorkerInterface {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RepoViewAdapter
+    private val preloadDataThreshold: Int = 60
     private var worker: Worker? = null;
+
+    private fun requestData() {
+        worker?.let {
+            lifecycleScope.launch(Dispatchers.Main) {
+                let@it.requestRepositories(viewAdapter.dataSet.size)
+            }
+        }
+    }
+
+    private fun requestDataDone() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +45,9 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
 
         recyclerView.adapter = viewAdapter
 
-        worker = Worker(lifecycleScope, this)
+        worker = Worker(this)
 
-        worker?.requestRepositories(viewAdapter.dataSet.size)
+        requestData()
 
         recyclerView.setOnScrollChangeListener(object : View.OnScrollChangeListener {
             override fun onScrollChange(
@@ -43,10 +58,9 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
                 oldScrollY: Int
             ) {
                 val index = (recyclerView.layoutManager as? LinearLayoutManager)?.findFirstCompletelyVisibleItemPosition()?:0
-                if (viewAdapter.dataSet.size - 60 < index) {
-                    worker?.requestRepositories(viewAdapter.dataSet.size)
+                if (viewAdapter.dataSet.size - preloadDataThreshold < index) {
+                    requestData()
                 }
-
             }
         })
 
@@ -60,5 +74,7 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
             addAll(size, list)
         }
         viewAdapter.notifyDataSetChanged()
+
+        requestDataDone()
     }
 }
