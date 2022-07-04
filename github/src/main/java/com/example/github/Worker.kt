@@ -1,20 +1,10 @@
 package com.example.github
 
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class Worker (var lifecycleScope: LifecycleCoroutineScope, val activity: MainActivity) {
-
-    data class UserReposInfo(
-        var name: String,
-        var url: String
-    )
+class Worker (var lifecycleScope: LifecycleCoroutineScope, val workerInterface: WorkerInterface) {
 
     fun requestInfo(userName: String) {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -37,7 +27,7 @@ class Worker (var lifecycleScope: LifecycleCoroutineScope, val activity: MainAct
                 }
             }
 
-            activity.notifyDataUpdated(userInfo, userReposInfo)
+            workerInterface.notifyDataUpdated(userInfo, userReposInfo)
         }
     }
 

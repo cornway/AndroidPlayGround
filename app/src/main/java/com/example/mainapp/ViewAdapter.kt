@@ -1,10 +1,11 @@
-package com.example.github
+package com.example.mainapp
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.github.R
 
 class ViewAdapter ():
     RecyclerView.Adapter<ViewAdapter.ViewHolder>() {

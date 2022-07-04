@@ -1,4 +1,4 @@
-package com.example.github
+package com.example.mainapp
 
 data class ViewElement(
     var name: String,
