@@ -9,7 +9,7 @@ data class UserRepos (
     @SerializedName("name"                        ) var name                     : String?           = null,
     @SerializedName("full_name"                   ) var fullName                 : String?           = null,
     @SerializedName("private"                     ) var private                  : Boolean?          = null,
-    @SerializedName("owner"                       ) var owner                    : Owner?            = Owner(),
+    @SerializedName("owner"                       ) var owner                    : UserInfo.Owner?   = UserInfo.Owner(),
     @SerializedName("html_url"                    ) var htmlUrl                  : String?           = null,
     @SerializedName("description"                 ) var description              : String?           = null,
     @SerializedName("fork"                        ) var fork                     : Boolean?          = null,
@@ -72,27 +72,4 @@ data class UserRepos (
     @SerializedName("archived"                    ) var archived                 : Boolean?          = null,
     @SerializedName("disabled"                    ) var disabled                 : Boolean?          = null,
     @SerializedName("open_issues_count"           ) var openIssuesCount          : Int?              = null,
-) {
-    data class Owner (
-
-        @SerializedName("login"               ) var login             : String?  = null,
-        @SerializedName("id"                  ) var id                : Int?     = null,
-        @SerializedName("node_id"             ) var nodeId            : String?  = null,
-        @SerializedName("avatar_url"          ) var avatarUrl         : String?  = null,
-        @SerializedName("gravatar_id"         ) var gravatarId        : String?  = null,
-        @SerializedName("url"                 ) var url               : String?  = null,
-        @SerializedName("html_url"            ) var htmlUrl           : String?  = null,
-        @SerializedName("followers_url"       ) var followersUrl      : String?  = null,
-        @SerializedName("following_url"       ) var followingUrl      : String?  = null,
-        @SerializedName("gists_url"           ) var gistsUrl          : String?  = null,
-        @SerializedName("starred_url"         ) var starredUrl        : String?  = null,
-        @SerializedName("subscriptions_url"   ) var subscriptionsUrl  : String?  = null,
-        @SerializedName("organizations_url"   ) var organizationsUrl  : String?  = null,
-        @SerializedName("repos_url"           ) var reposUrl          : String?  = null,
-        @SerializedName("events_url"          ) var eventsUrl         : String?  = null,
-        @SerializedName("received_events_url" ) var receivedEventsUrl : String?  = null,
-        @SerializedName("type"                ) var type              : String?  = null,
-        @SerializedName("site_admin"          ) var siteAdmin         : Boolean? = null
-
-    )
-}
+)

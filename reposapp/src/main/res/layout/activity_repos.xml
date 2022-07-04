@@ -39,6 +39,15 @@
 
             </Button>
 
+            <Button
+                android:id="@+id/trending_repos_button"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Trending">
+
+            </Button>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </ScrollView>

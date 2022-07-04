@@ -1,8 +1,10 @@
 package com.example.github
 
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.example.example.Repositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.sin
 
 class Worker (var lifecycleScope: LifecycleCoroutineScope, val workerInterface: WorkerInterface) {
 
@@ -28,6 +30,25 @@ class Worker (var lifecycleScope: LifecycleCoroutineScope, val workerInterface: 
             }
 
             workerInterface.notifyDataUpdated(userInfo, userReposInfo)
+        }
+    }
+
+    fun requestRepositories(since: Int) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val githubApi = GithubApi.create().create(GithubApi::class.java)
+
+            val reposInfo: MutableList<Repositories> = mutableListOf()
+
+            val repos = githubApi.getRepos(since.toString())
+
+            reposInfo.clear()
+            repos?.body()?.let {
+                it.forEach { repo ->
+                    reposInfo.add(repo)
+                }
+            }
+
+            workerInterface.notifyReposUpdated(reposInfo)
         }
     }
 

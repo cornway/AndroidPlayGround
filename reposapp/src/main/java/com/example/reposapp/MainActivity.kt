@@ -12,11 +12,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_repos)
-        val button: Button = findViewById(R.id.repositories_button)
+        var button: Button = findViewById(R.id.repositories_button)
 
         button.setOnClickListener {
             val intent = Intent(this, ReposActivity::class.java)
             intent.data = (Uri.parse("cornway"))
+            startActivity(intent)
+        }
+        button = findViewById(R.id.trending_repos_button)
+        button.setOnClickListener {
+            val intent = Intent(this, AllRepoActivity::class.java)
+            intent.data = (Uri.parse(""))
             startActivity(intent)
         }
     }
