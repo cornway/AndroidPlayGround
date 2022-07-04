@@ -1,6 +1,8 @@
 package com.example.reposapp
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.github.*
 
 
@@ -27,6 +31,7 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     override fun notifyDataUpdated(userInfo: UserInfo?, userRepos: MutableList<UserReposInfo>) {
+        var bitmap: Bitmap? = null
         userInfo?.let {
             var textView: TextView = findViewById(R.id.user_name)
             textView.text = userInfo.login
@@ -35,14 +40,27 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
             textView.text = userInfo.location
 
             val imageView: ImageView = findViewById(R.id.user_image)
-            Glide.with(imageView)
+            Glide.with(this)
+                .asBitmap()
                 .load(userInfo.avatarUrl)
-                .into(imageView)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        imageView.setImageBitmap(resource)
+                        notifyDataUpdated@bitmap = resource
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                    }
+
+                })
         }
 
         viewAdapter.dataSet.clear()
         userRepos.forEach() {
-            viewAdapter.dataSet.add(ViewElement(it.name, it.url))
+            viewAdapter.dataSet.add(ViewElement(it.name, it.url, bitmap))
         }
         viewAdapter.notifyDataSetChanged()
         swipeRefreshLayout.isRefreshing = false

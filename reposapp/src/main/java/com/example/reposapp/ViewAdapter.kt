@@ -3,6 +3,7 @@ package com.example.reposapp
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.github.R
@@ -15,10 +16,12 @@ class ViewAdapter ():
         class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val userRepoName: TextView?
             val userRepoUrl: TextView?
+            val userAvatar: ImageView?
 
             init {
                 userRepoName = view.findViewById(R.id.view_user_repo_name)
                 userRepoUrl = view.findViewById(R.id.view_user_repo_url)
+                userAvatar = view.findViewById(R.id.view_user_avatar)
             }
         }
 
@@ -32,6 +35,7 @@ class ViewAdapter ():
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.userRepoName?.text = dataSet[position].name
         holder.userRepoUrl?.text = dataSet[position].url
+        holder.userAvatar?.setImageBitmap(dataSet[position].avatar)
     }
 
     override fun getItemCount(): Int {
