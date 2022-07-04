@@ -26,6 +26,17 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     private var worker: Worker? = null;
     private lateinit var userName: String;
 
+    private fun requestInfo() {
+        worker?.let {
+            swipeRefreshLayout.isRefreshing
+            it.requestInfo(userName)
+        }
+    }
+
+    fun requestInfoDone() {
+        swipeRefreshLayout.isRefreshing = false
+    }
+
     override fun onRefresh() {
         worker?.requestInfo(userName)
     }
@@ -63,7 +74,7 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
             viewAdapter.dataSet.add(ViewElement(it.name, it.url, bitmap))
         }
         viewAdapter.notifyDataSetChanged()
-        swipeRefreshLayout.isRefreshing = false
+        requestInfoDone()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +93,6 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
         userName = intent.data.toString()
 
-        worker?.requestInfo(userName)
-
+        requestInfo()
     }
 }
