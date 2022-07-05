@@ -33,8 +33,10 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun appendData(newDataSet: List<RepoViewElement>) {
-        setData(dataSet + newDataSet)
+    fun appendData(newDataSet: List<RepoViewElement>?) {
+        newDataSet?.let {
+            setData(dataSet + newDataSet)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

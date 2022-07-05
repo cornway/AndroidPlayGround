@@ -14,7 +14,7 @@ interface GithubApi {
     suspend fun getUserInfo(@Path("user") url: String) : Response<UserInfo>
 
     @GET("users/{user}/repos")
-    suspend fun getUserRepos(@Path("user") url: String) : Response<Array<UserRepos>>
+    suspend fun getUserRepos(@Path("user") url: String) : Response<Array<Repositories>>
 
     @GET("repositories")
     suspend fun getRepos(@Query("since") since: String, @Query("per_page") perPage: String) : Response<Array<Repositories>>

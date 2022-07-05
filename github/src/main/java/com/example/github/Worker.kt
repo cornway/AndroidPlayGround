@@ -6,45 +6,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.sin
 
-class Worker (private val workerInterface: WorkerInterface) {
+class Worker (private val workerInterface: WorkerInterface<Repositories>) {
 
     suspend fun requestInfo(userName: String) {
         val githubApi = GithubApi.create().create(GithubApi::class.java)
-        var userInfo: UserInfo? = null
-        var userReposInfo: MutableList<UserReposInfo> = mutableListOf()
+        var userInfo: UserInfo? = githubApi.getUserInfo(userName).body()
+        val repositories = githubApi.getUserRepos(userName).body()
 
-        val resultUser = githubApi.getUserInfo(userName)
-        resultUser.let {
-            userInfo = it.body()
-        }
-
-        val resultRepos = githubApi.getUserRepos(userName)
-        val userRepos = resultRepos.body()
-
-        userReposInfo.clear()
-        userRepos?.let {
-            userRepos.forEach {
-                userReposInfo.add(UserReposInfo(it.name?:"Not Found", it.url?:"Not Found"))
-            }
-        }
-
-        workerInterface.notifyDataUpdated(userInfo, userReposInfo)
+        workerInterface.notifyDataUpdated(userInfo, repositories)
     }
 
     suspend fun requestRepositories(since: Int, perPage: Int) {
         val githubApi = GithubApi.create().create(GithubApi::class.java)
+        val repositories = githubApi.getRepos(since.toString(), perPage.toString())
 
-        val reposInfo: MutableList<Repositories> = mutableListOf()
-
-        val repos = githubApi.getRepos(since.toString(), perPage.toString())
-
-        repos?.body()?.let {
-            it.forEach { repo ->
-                reposInfo.add(repo)
-            }
-        }
-
-        workerInterface.notifyReposUpdated(reposInfo)
+        workerInterface.notifyDataUpdated(null, repositories.body())
     }
 
 }

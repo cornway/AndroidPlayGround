@@ -12,13 +12,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.example.Repositories
 import com.example.github.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
-    WorkerInterface {
+    WorkerInterface<Repositories> {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MyRepoViewAdapter
@@ -42,36 +43,24 @@ class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener
         requestInfo()
     }
 
-    override fun notifyDataUpdated(userInfo: UserInfo?, userRepos: MutableList<UserReposInfo>) {
-        var bitmap: Bitmap? = null
-        userInfo?.let {
+    override fun notifyDataUpdated(userInfo: UserInfo?, repositories: Array<Repositories>?) {
+        val owner = repositories?.get(0)?.owner
+        owner?.let {
             var textView: TextView = findViewById(R.id.user_name)
-            textView.text = userInfo.login
+            textView.text = it.login
 
             textView = findViewById(R.id.user_location)
-            textView.text = userInfo.location
+            //TODO
+            textView.text = "Location"
 
             val imageView: ImageView = findViewById(R.id.user_image)
             Glide.with(this)
-                .asBitmap()
-                .load(userInfo.avatarUrl)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        imageView.setImageBitmap(resource)
-                        notifyDataUpdated@bitmap = resource
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-
-                })
+                .load(it.avatarUrl)
+                .into(imageView)
         }
 
-        val list = userRepos.map {
-            MyRepoViewElement(it.name, it.url, bitmap)
+        val list = repositories?.map {
+            MyRepoViewElement(it.owner?.login, it.url, it.owner?.avatarUrl)
         }
         viewAdapter.setData(list)
         requestInfoDone()

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.github.R
 import com.example.mydiffutil.UserDiffUtilCallback
 
@@ -27,11 +28,13 @@ class MyRepoViewAdapter ():
             }
         }
 
-    fun setData(updatedDataSet: List<MyRepoViewElement>) {
-        val diffResult = DiffUtil.calculateDiff(UserDiffUtilCallback(dataSet, updatedDataSet))
-        dataSet.clear()
-        dataSet.addAll(updatedDataSet)
-        diffResult.dispatchUpdatesTo(this)
+    fun setData(updatedDataSet: List<MyRepoViewElement>?) {
+        updatedDataSet?.let {
+            val diffResult = DiffUtil.calculateDiff(UserDiffUtilCallback(dataSet, updatedDataSet))
+            dataSet.clear()
+            dataSet.addAll(updatedDataSet)
+            diffResult.dispatchUpdatesTo(this)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -44,7 +47,13 @@ class MyRepoViewAdapter ():
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.userRepoName?.text = dataSet[position].name
         holder.userRepoUrl?.text = dataSet[position].url
-        holder.userAvatar?.setImageBitmap(dataSet[position].avatar)
+
+        holder.userAvatar?.let {
+            Glide.with(it)
+                .load(dataSet[position].avatarUrl)
+                .into(it)
+
+        }
     }
 
     override fun getItemCount(): Int {

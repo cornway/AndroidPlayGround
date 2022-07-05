@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.example.Repositories
 import com.example.github.R
+import com.example.github.UserInfo
 import com.example.github.Worker
 import com.example.github.WorkerInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RepositoriesActivity : AppCompatActivity(), WorkerInterface {
+class RepositoriesActivity : AppCompatActivity(), WorkerInterface<Repositories> {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RepoViewAdapter
     private val preloadDataThreshold: Int = 60
@@ -68,8 +69,8 @@ class RepositoriesActivity : AppCompatActivity(), WorkerInterface {
 
     }
 
-    override fun notifyReposUpdated(repos: MutableList<Repositories>) {
-        val list = repos.map {
+    override fun notifyDataUpdated(userInfo: UserInfo?, repositories: Array<Repositories>?) {
+        val list = repositories?.map {
             RepoViewElement(it.name?:"null", it.owner?.login, it.owner?.avatarUrl)
         }
         viewAdapter.onItemClick = {
