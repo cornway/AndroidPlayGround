@@ -15,13 +15,13 @@ class MainActivity : AppCompatActivity() {
         var button: Button = findViewById(R.id.repositories_button)
 
         button.setOnClickListener {
-            val intent = Intent(this, ReposActivity::class.java)
+            val intent = Intent(this, MyRepoActivity::class.java)
             intent.data = (Uri.parse("cornway"))
             startActivity(intent)
         }
         button = findViewById(R.id.trending_repos_button)
         button.setOnClickListener {
-            val intent = Intent(this, AllRepoActivity::class.java)
+            val intent = Intent(this, RepositoriesActivity::class.java)
             intent.data = (Uri.parse(""))
             startActivity(intent)
         }

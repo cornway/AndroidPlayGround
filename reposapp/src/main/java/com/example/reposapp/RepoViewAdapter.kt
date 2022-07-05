@@ -14,6 +14,7 @@ import com.example.mydiffutil.UserDiffUtilCallback
 class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
     private var dataSet: MutableList<RepoViewElement> = mutableListOf()
+    var onItemClick: ((String) -> Unit)? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView?
@@ -43,7 +44,14 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.nameView?.text = dataSet[position].name
+        holder.nameView?.apply {
+            text = dataSet[position].name
+            dataSet[position].ownerName?.let { name ->
+                setOnClickListener {
+                    onItemClick?.invoke(name)
+                }
+            }
+        }
 
         holder.avatarView?.let {
             dataSet[position].avatarUrl?.let { avatarUrl ->

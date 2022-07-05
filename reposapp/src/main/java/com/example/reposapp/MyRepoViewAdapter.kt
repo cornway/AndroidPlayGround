@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.github.R
 import com.example.mydiffutil.UserDiffUtilCallback
 
-class ViewAdapter ():
-    RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
+class MyRepoViewAdapter ():
+    RecyclerView.Adapter<MyRepoViewAdapter.ViewHolder>() {
 
-        private var dataSet: MutableList<ViewElement> = mutableListOf()
+        private var dataSet: MutableList<MyRepoViewElement> = mutableListOf()
 
         class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val userRepoName: TextView?
@@ -27,7 +27,7 @@ class ViewAdapter ():
             }
         }
 
-    fun setData(updatedDataSet: List<ViewElement>) {
+    fun setData(updatedDataSet: List<MyRepoViewElement>) {
         val diffResult = DiffUtil.calculateDiff(UserDiffUtilCallback(dataSet, updatedDataSet))
         dataSet.clear()
         dataSet.addAll(updatedDataSet)

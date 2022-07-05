@@ -1,16 +1,13 @@
 package com.example.reposapp
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.example.example.Repositories
 import com.example.github.R
 import com.example.github.Worker
@@ -18,7 +15,7 @@ import com.example.github.WorkerInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AllRepoActivity : AppCompatActivity(), WorkerInterface {
+class RepositoriesActivity : AppCompatActivity(), WorkerInterface {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RepoViewAdapter
     private val preloadDataThreshold: Int = 60
@@ -73,7 +70,12 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
 
     override fun notifyReposUpdated(repos: MutableList<Repositories>) {
         val list = repos.map {
-            RepoViewElement(it.name?:"Not Found", it.owner?.avatarUrl)
+            RepoViewElement(it.name?:"null", it.owner?.login, it.owner?.avatarUrl)
+        }
+        viewAdapter.onItemClick = {
+            val intent = Intent(this, MyRepoActivity::class.java)
+            intent.data = (Uri.parse(it))
+            startActivity(intent)
         }
         viewAdapter.appendData(list)
         requestDataDone()

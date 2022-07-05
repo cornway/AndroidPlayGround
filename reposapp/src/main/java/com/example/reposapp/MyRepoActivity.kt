@@ -1,12 +1,9 @@
 package com.example.reposapp
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -20,11 +17,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
+class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     WorkerInterface {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: ViewAdapter
+    private lateinit var viewAdapter: MyRepoViewAdapter
     private var worker: Worker? = null;
     private lateinit var userName: String;
 
@@ -74,7 +71,7 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         }
 
         val list = userRepos.map {
-            ViewElement(it.name, it.url, bitmap)
+            MyRepoViewElement(it.name, it.url, bitmap)
         }
         viewAdapter.setData(list)
         requestInfoDone()
@@ -89,7 +86,7 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         swipeRefreshLayout.setOnRefreshListener(this)
 
         recyclerView = findViewById(R.id.recycler_view)
-        viewAdapter = ViewAdapter()
+        viewAdapter = MyRepoViewAdapter()
         recyclerView.adapter = viewAdapter
 
         worker = Worker(this)

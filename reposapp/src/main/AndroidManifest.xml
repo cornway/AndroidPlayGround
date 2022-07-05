@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Github"
         tools:targetApi="31">
         <activity
-            android:name="com.example.reposapp.AllRepoActivity"
+            android:name="com.example.reposapp.RepositoriesActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.reposapp.ReposActivity"
+            android:name="com.example.reposapp.MyRepoActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
