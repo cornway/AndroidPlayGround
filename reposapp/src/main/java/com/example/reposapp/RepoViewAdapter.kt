@@ -5,13 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.github.R
+import com.example.mydiffutil.UserDiffUtilCallback
 
 class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
-    var dataSet: MutableList<RepoViewElement> = mutableListOf()
+    private var dataSet: MutableList<RepoViewElement> = mutableListOf()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView?
@@ -23,6 +25,17 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
         }
     }
 
+    fun setData(updatedDataSet: List<RepoViewElement>) {
+        val diffResult = DiffUtil.calculateDiff(UserDiffUtilCallback(dataSet, updatedDataSet))
+        dataSet.clear()
+        dataSet.addAll(updatedDataSet)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun appendData(newDataSet: List<RepoViewElement>) {
+        setData(dataSet + newDataSet)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.repos_view_item, parent, false)
@@ -31,10 +44,15 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nameView?.text = dataSet[position].name
+
         holder.avatarView?.let {
-            Glide.with(it)
-                .load(dataSet[position].avatarUrl)
-                .into(it)
+            dataSet[position].avatarUrl?.let { avatarUrl ->
+                if (avatarUrl != "null") {
+                    Glide.with(it)
+                        .load(avatarUrl)
+                        .into(it)
+                }
+            }
         }
     }
 

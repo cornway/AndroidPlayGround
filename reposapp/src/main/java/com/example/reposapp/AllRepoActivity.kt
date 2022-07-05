@@ -22,18 +22,21 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RepoViewAdapter
     private val preloadDataThreshold: Int = 60
+    private val preloadPerPage: Int = 10
+    private var requestPending: Boolean = false
     private var worker: Worker? = null;
 
     private fun requestData() {
         worker?.let {
+            requestPending = true
             lifecycleScope.launch(Dispatchers.Main) {
-                let@it.requestRepositories(viewAdapter.dataSet.size)
+                let@it.requestRepositories(viewAdapter.itemCount, preloadPerPage)
             }
         }
     }
 
     private fun requestDataDone() {
-
+        requestPending = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +60,11 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
                 oldScrollX: Int,
                 oldScrollY: Int
             ) {
-                val index = (recyclerView.layoutManager as? LinearLayoutManager)?.findFirstCompletelyVisibleItemPosition()?:0
-                if (viewAdapter.dataSet.size - preloadDataThreshold < index) {
-                    requestData()
+                if (!requestPending) {
+                    val index = (recyclerView.layoutManager as? LinearLayoutManager)?.findFirstCompletelyVisibleItemPosition()?:0
+                    if (viewAdapter.itemCount - preloadDataThreshold < index) {
+                        requestData()
+                    }
                 }
             }
         })
@@ -70,11 +75,7 @@ class AllRepoActivity : AppCompatActivity(), WorkerInterface {
         val list = repos.map {
             RepoViewElement(it.name?:"Not Found", it.owner?.avatarUrl)
         }
-        with(viewAdapter.dataSet) {
-            addAll(size, list)
-        }
-        viewAdapter.notifyDataSetChanged()
-
+        viewAdapter.appendData(list)
         requestDataDone()
     }
 }

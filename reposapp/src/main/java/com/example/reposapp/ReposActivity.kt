@@ -73,11 +73,10 @@ class ReposActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                 })
         }
 
-        viewAdapter.dataSet.clear()
-        userRepos.forEach() {
-            viewAdapter.dataSet.add(ViewElement(it.name, it.url, bitmap))
+        val list = userRepos.map {
+            ViewElement(it.name, it.url, bitmap)
         }
-        viewAdapter.notifyDataSetChanged()
+        viewAdapter.setData(list)
         requestInfoDone()
     }
 

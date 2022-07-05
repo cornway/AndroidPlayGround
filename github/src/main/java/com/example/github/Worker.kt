@@ -31,12 +31,12 @@ class Worker (private val workerInterface: WorkerInterface) {
         workerInterface.notifyDataUpdated(userInfo, userReposInfo)
     }
 
-    suspend fun requestRepositories(since: Int) {
+    suspend fun requestRepositories(since: Int, perPage: Int) {
         val githubApi = GithubApi.create().create(GithubApi::class.java)
 
         val reposInfo: MutableList<Repositories> = mutableListOf()
 
-        val repos = githubApi.getRepos(since.toString())
+        val repos = githubApi.getRepos(since.toString(), perPage.toString())
 
         repos?.body()?.let {
             it.forEach { repo ->

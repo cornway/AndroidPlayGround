@@ -5,13 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.github.R
+import com.example.mydiffutil.UserDiffUtilCallback
 
 class ViewAdapter ():
     RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
 
-        var dataSet: MutableList<ViewElement> = mutableListOf()
+        private var dataSet: MutableList<ViewElement> = mutableListOf()
 
         class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val userRepoName: TextView?
@@ -24,6 +26,13 @@ class ViewAdapter ():
                 userAvatar = view.findViewById(R.id.view_user_avatar)
             }
         }
+
+    fun setData(updatedDataSet: List<ViewElement>) {
+        val diffResult = DiffUtil.calculateDiff(UserDiffUtilCallback(dataSet, updatedDataSet))
+        dataSet.clear()
+        dataSet.addAll(updatedDataSet)
+        diffResult.dispatchUpdatesTo(this)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)

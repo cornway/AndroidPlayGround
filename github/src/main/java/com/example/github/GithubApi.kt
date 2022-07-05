@@ -17,7 +17,7 @@ interface GithubApi {
     suspend fun getUserRepos(@Path("user") url: String) : Response<Array<UserRepos>>
 
     @GET("repositories")
-    suspend fun getRepos(@Query("since") since: String) : Response<Array<Repositories>>
+    suspend fun getRepos(@Query("since") since: String, @Query("per_page") perPage: String) : Response<Array<Repositories>>
 
     companion object {
         var BASE_URL = "https://api.github.com/"
