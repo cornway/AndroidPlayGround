@@ -4,16 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.github.R
-import github.domain.repository.RequestRepoFeedRepository
-import github.domain.usecase.RequestRepoFeedUseCase
+import github.data.repository.RequestRepoFeedRepositoryImpl
 import github.domain.usecase.RequestRepoFeedUseCaseImpl
 import github.domain.viewmodel.RepositoriesViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class RepositoriesActivity : AppCompatActivity(), LiveDataObserveProtocol {
     private lateinit var recyclerView: RecyclerView
@@ -57,7 +53,7 @@ class RepositoriesActivity : AppCompatActivity(), LiveDataObserveProtocol {
         recyclerView.adapter = viewAdapter
 
         setupListeners()
-        val requestRepoFeedRepository = RequestRepoFeedRepository()
+        val requestRepoFeedRepository = RequestRepoFeedRepositoryImpl()
         val requestRepoFeedUseCase = RequestRepoFeedUseCaseImpl(requestRepoFeedRepository)
         model = RepositoriesViewModel(requestRepoFeedUseCase)
 

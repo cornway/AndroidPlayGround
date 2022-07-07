@@ -7,14 +7,10 @@ class RequestRepoFeedUseCaseImpl(
     private val requestRepoFeedRepository: RequestRepoFeedRepository
 ) : RequestRepoFeedUseCase {
     override suspend fun requestPerUser(userName: String): List<RepoViewElement>? {
-        requestRepoFeedRepository.requestPerUser(userName)
-
-        return requestRepoFeedRepository.repositoriesViewData
+        return requestRepoFeedRepository.requestPerUser(userName)
     }
 
     override suspend fun requestFeed(since: Int, perPage: Int): List<RepoViewElement>? {
-        requestRepoFeedRepository.requestFeed(since, perPage)
-
-        return requestRepoFeedRepository.repositoriesViewData
+        return requestRepoFeedRepository.requestFeed(since, perPage)
     }
 }

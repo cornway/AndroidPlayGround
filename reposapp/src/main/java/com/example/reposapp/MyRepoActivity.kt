@@ -4,17 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.github.R
 import com.example.github.RepoViewElement
-import github.domain.repository.RequestRepoFeedRepository
+import github.data.repository.RequestRepoFeedRepositoryImpl
 import github.domain.usecase.RequestRepoFeedUseCaseImpl
 import github.domain.viewmodel.RepositoriesViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
@@ -60,7 +57,7 @@ class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener
         viewAdapter = MyRepoViewAdapter()
         recyclerView.adapter = viewAdapter
 
-        val requestRepoFeedRepository = RequestRepoFeedRepository()
+        val requestRepoFeedRepository = RequestRepoFeedRepositoryImpl()
         val requestRepoFeedUseCase = RequestRepoFeedUseCaseImpl(requestRepoFeedRepository)
         model = RepositoriesViewModel(requestRepoFeedUseCase)
 
