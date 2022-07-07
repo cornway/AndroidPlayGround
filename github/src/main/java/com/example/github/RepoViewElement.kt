@@ -1,9 +1,9 @@
-package com.example.reposapp
+package com.example.github
 
 import com.example.mydiffutil.UserDiffUtilInterface
 
 data class RepoViewElement (
-    val name: String,
+    val name: String?,
     val ownerName: String?,
     val avatarUrl: String?
 ) : UserDiffUtilInterface<RepoViewElement> {

@@ -1,5 +1,6 @@
 package com.example.reposapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +10,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.github.R
+import com.example.github.RepoViewElement
 import com.example.mydiffutil.UserDiffUtilCallback
 
 class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
-    private var dataSet: MutableList<RepoViewElement> = mutableListOf()
+    private var dataSet: List<RepoViewElement> = listOf()
     var onItemClick: ((String) -> Unit)? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -28,15 +30,12 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
     fun setData(updatedDataSet: List<RepoViewElement>) {
         val diffResult = DiffUtil.calculateDiff(UserDiffUtilCallback(dataSet, updatedDataSet))
-        dataSet.clear()
-        dataSet.addAll(updatedDataSet)
+        dataSet = updatedDataSet
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun appendData(newDataSet: List<RepoViewElement>?) {
-        newDataSet?.let {
-            setData(dataSet + newDataSet)
-        }
+    fun appendData(newDataSet: List<RepoViewElement>) {
+        setData(dataSet + newDataSet)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

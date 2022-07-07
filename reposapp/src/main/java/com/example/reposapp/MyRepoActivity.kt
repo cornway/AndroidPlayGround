@@ -4,22 +4,25 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
-import com.example.example.Repositories
 import com.example.github.R
+import com.example.github.RepoViewElement
+import github.domain.repository.RequestRepoFeedRepository
+import github.domain.usecase.RequestRepoFeedUseCaseImpl
 import github.domain.viewmodel.RepositoriesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
+    LiveDataObserveProtocol {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MyRepoViewAdapter
+
     //TODO viewModels()
     private lateinit var model: RepositoriesViewModel
 
@@ -27,26 +30,21 @@ class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener
         swipeRefreshLayout.isRefreshing = false
     }
 
-    private fun notifyDataUpdated(repositories: Array<Repositories>) {
-        val owner = repositories[0].owner
-        owner?.let {
-            var textView: TextView = findViewById(R.id.user_name)
-            textView.text = it.login
+    private fun notifyDataUpdated(repositories: List<RepoViewElement>) {
+        val ownerName = repositories[0].ownerName
+        var textView: TextView = findViewById(R.id.user_name)
+        textView.text = ownerName
 
-            textView = findViewById(R.id.user_location)
-            //TODO
-            textView.text = "Location"
+        textView = findViewById(R.id.user_location)
+        //TODO
+        textView.text = "Location"
 
-            val imageView: ImageView = findViewById(R.id.user_image)
-            Glide.with(this)
-                .load(it.avatarUrl)
-                .into(imageView)
-        }
+        val imageView: ImageView = findViewById(R.id.user_image)
+        Glide.with(this)
+            .load(repositories[0].avatarUrl)
+            .into(imageView)
 
-        val list = repositories.map {
-            MyRepoViewElement(it.owner?.login, it.url, it.owner?.avatarUrl)
-        }
-        viewAdapter.setData(list)
+        viewAdapter.setData(repositories)
         requestInfoDone()
     }
 
@@ -55,20 +53,20 @@ class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        swipeRefreshLayout =  findViewById(R.id.swipe_refresh)
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh)
         swipeRefreshLayout.setOnRefreshListener(this)
 
         recyclerView = findViewById(R.id.recycler_view)
         viewAdapter = MyRepoViewAdapter()
         recyclerView.adapter = viewAdapter
 
-        model = RepositoriesViewModel(intent.data.toString())
+        val requestRepoFeedRepository = RequestRepoFeedRepository()
+        val requestRepoFeedUseCase = RequestRepoFeedUseCaseImpl(requestRepoFeedRepository)
+        model = RepositoriesViewModel(requestRepoFeedUseCase)
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            model.invoke()
-        }
+        model.requestPerUser(intent.data.toString())
 
-        model.repositories.observe(this) { notifyDataUpdated(it) }
+        observe(model.repositories) { notifyDataUpdated(it) }
     }
 
     override fun onRefresh() {
