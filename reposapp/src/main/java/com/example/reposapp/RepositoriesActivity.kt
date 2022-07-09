@@ -7,17 +7,16 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.github.R
-import github.data.repository.RequestRepoFeedRepositoryImpl
-import github.domain.usecase.RequestRepoFeedUseCaseImpl
 import github.domain.viewmodel.RepositoriesViewModel
+import org.koin.core.component.KoinComponent
 
-class RepositoriesActivity : AppCompatActivity(), LiveDataObserveProtocol {
+class RepositoriesActivity : AppCompatActivity(), LiveDataObserveProtocol, KoinComponent {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RepoViewAdapter
     private val preloadDataThreshold: Int = 60
     private var requestPending: Boolean = false
-    //TODO viewModels()
     private lateinit var model: RepositoriesViewModel
+    //TODO viewModels()
 
     private fun requestDataDone() {
         requestPending = false
@@ -53,12 +52,12 @@ class RepositoriesActivity : AppCompatActivity(), LiveDataObserveProtocol {
         recyclerView.adapter = viewAdapter
 
         setupListeners()
-        val requestRepoFeedRepository = RequestRepoFeedRepositoryImpl()
-        val requestRepoFeedUseCase = RequestRepoFeedUseCaseImpl(requestRepoFeedRepository)
-        model = RepositoriesViewModel(requestRepoFeedUseCase)
+        model = RepositoriesViewModel()
 
         model.requestFeed(viewAdapter.itemCount, 100)
 
         observe(model.repositories) { viewAdapter.appendData(it) }
     }
 }
+
+

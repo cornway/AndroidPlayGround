@@ -3,10 +3,12 @@ package github.domain.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.example.github.RepoViewElement
 import github.domain.usecase.RequestRepoFeedUseCase
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class RepositoriesViewModel(
-    private val requestRepoFeedUseCase: RequestRepoFeedUseCase
-): BaseViewModel() {
+class RepositoriesViewModel: BaseViewModel() {
+
+    private val requestRepoFeedUseCase by inject<RequestRepoFeedUseCase>()
 
     val repositories: MutableLiveData<List<RepoViewElement>> by lazy {
         MutableLiveData<List<RepoViewElement>>()

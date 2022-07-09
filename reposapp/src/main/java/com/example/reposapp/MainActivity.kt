@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.example.github.*
+import github.domain.viewmodel.modules.githubModules
+import org.koin.core.context.startKoin
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

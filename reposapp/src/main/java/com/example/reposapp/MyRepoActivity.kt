@@ -20,7 +20,6 @@ class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MyRepoViewAdapter
 
-    //TODO viewModels()
     private lateinit var model: RepositoriesViewModel
 
     private fun requestInfoDone() {
@@ -57,9 +56,7 @@ class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener
         viewAdapter = MyRepoViewAdapter()
         recyclerView.adapter = viewAdapter
 
-        val requestRepoFeedRepository = RequestRepoFeedRepositoryImpl()
-        val requestRepoFeedUseCase = RequestRepoFeedUseCaseImpl(requestRepoFeedRepository)
-        model = RepositoriesViewModel(requestRepoFeedUseCase)
+        model = RepositoriesViewModel()
 
         model.requestPerUser(intent.data.toString())
 
