@@ -1,4 +1,4 @@
-package com.github.app.ui
+package com.github.app.ui.trendingfeed
 
 import android.view.LayoutInflater
 import android.view.View
