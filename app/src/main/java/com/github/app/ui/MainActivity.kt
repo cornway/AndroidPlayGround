@@ -17,11 +17,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_app) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            val bundle = bundleOf("userName" to "cornway")
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add<TrendingFeedFragment>(R.id.fragment_trending_feed, args = bundle)
-            }
+            setupFragment<TrendingFeedFragment>(R.id.fragment_trending_feed)
         }
 
         var button: Button = findViewById(R.id.repositories_button)
