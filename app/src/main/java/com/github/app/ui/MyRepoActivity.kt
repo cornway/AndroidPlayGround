@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.github.R
+import com.github.app.ui.common.BaseActivity
 import com.github.domain.viewmodel.RepositoriesViewModel
-import com.github.ui.RepoViewElement
+import com.github.data.RepositoryElement
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyRepoActivity : BaseActivity<RepositoriesViewModel>(), SwipeRefreshLayout.OnRefreshListener
@@ -23,7 +24,7 @@ class MyRepoActivity : BaseActivity<RepositoriesViewModel>(), SwipeRefreshLayout
         swipeRefreshLayout.isRefreshing = false
     }
 
-    private fun notifyDataUpdated(repositories: List<RepoViewElement>) {
+    private fun notifyDataUpdated(repositories: List<RepositoryElement>) {
         val ownerName = repositories[0].ownerName
         var textView: TextView = findViewById(R.id.user_name)
         textView.text = ownerName

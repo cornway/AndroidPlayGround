@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.github.R
 import com.example.mydiffutil.UserDiffUtilCallback
-import com.github.ui.RepoViewElement
+import com.github.data.RepositoryElement
 
 class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
-    private var dataSet: List<RepoViewElement> = listOf()
+    private var dataSet: List<RepositoryElement> = listOf()
     var onItemClick: ((String) -> Unit)? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -27,13 +27,13 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
         }
     }
 
-    fun setData(updatedDataSet: List<RepoViewElement>) {
+    fun setData(updatedDataSet: List<RepositoryElement>) {
         val diffResult = DiffUtil.calculateDiff(UserDiffUtilCallback(dataSet, updatedDataSet))
         dataSet = updatedDataSet
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun appendData(newDataSet: List<RepoViewElement>) {
+    fun appendData(newDataSet: List<RepositoryElement>) {
         setData(dataSet + newDataSet)
     }
 

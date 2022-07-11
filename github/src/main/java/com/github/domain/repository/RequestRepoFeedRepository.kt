@@ -1,8 +1,8 @@
 package com.github.domain.repository
 
-import com.github.ui.RepoViewElement
+import com.github.data.RepositoryElement
 
 interface RequestRepoFeedRepository {
-    suspend fun requestPerUser(userName: String): List<RepoViewElement>?
-    suspend fun requestFeed(since: Int, perPage: Int): List<RepoViewElement>?
+    suspend fun requestPerUser(userName: String): List<RepositoryElement>?
+    suspend fun requestFeed(since: Int, perPage: Int): List<RepositoryElement>?
 }

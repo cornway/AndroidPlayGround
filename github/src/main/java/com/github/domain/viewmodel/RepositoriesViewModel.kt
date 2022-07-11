@@ -2,14 +2,14 @@ package com.github.domain.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.github.domain.usecase.RequestRepoFeedUseCase
-import com.github.ui.RepoViewElement
+import com.github.data.RepositoryElement
 
 class RepositoriesViewModel(
     private val requestRepoFeedUseCase: RequestRepoFeedUseCase
 ): BaseViewModel() {
 
-    val repositories: MutableLiveData<List<RepoViewElement>> by lazy {
-        MutableLiveData<List<RepoViewElement>>()
+    val repositories: MutableLiveData<List<RepositoryElement>> by lazy {
+        MutableLiveData<List<RepositoryElement>>()
     }
 
     fun requestPerUser (userName: String) {

@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.github.R
+import com.github.app.ui.common.BaseActivity
 import com.github.domain.viewmodel.RepositoriesViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

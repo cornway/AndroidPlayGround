@@ -1,4 +1,4 @@
-package com.github.app.ui
+package com.github.app.ui.common
 
 import androidx.appcompat.app.AppCompatActivity
 import com.github.domain.viewmodel.BaseViewModel

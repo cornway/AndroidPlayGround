@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "github"
-include ':reposapp'
+include ':app'
 include ':github'
 include ':mydiffutil'
