@@ -1,0 +1,32 @@
+package com.github.domain.viewmodel
+
+import androidx.lifecycle.MutableLiveData
+import com.github.domain.usecase.RequestRepoFeedUseCase
+import com.github.ui.RepoViewElement
+
+class RepositoriesViewModel(
+    private val requestRepoFeedUseCase: RequestRepoFeedUseCase
+): BaseViewModel() {
+
+    val repositories: MutableLiveData<List<RepoViewElement>> by lazy {
+        MutableLiveData<List<RepoViewElement>>()
+    }
+
+    fun requestPerUser (userName: String) {
+        execute {
+            val value = requestRepoFeedUseCase.requestPerUser(userName)
+            value?.let {
+                repositories.value = it
+            }
+        }
+    }
+
+    fun requestFeed (since: Int, perPage: Int) {
+        execute {
+            val value = requestRepoFeedUseCase.requestFeed(since, perPage)
+            value?.let {
+                repositories.value = it
+            }
+        }
+    }
+}
