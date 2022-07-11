@@ -12,8 +12,8 @@ import com.example.github.R
 import com.example.mydiffutil.UserDiffUtilCallback
 import com.github.data.RepositoryElement
 
-class MyRepoViewAdapter ():
-    RecyclerView.Adapter<MyRepoViewAdapter.ViewHolder>() {
+class ViewAdapter ():
+    RecyclerView.Adapter<ViewAdapter.ViewHolder>() {
 
         private var dataSet: MutableList<RepositoryElement> = mutableListOf()
 
@@ -40,7 +40,7 @@ class MyRepoViewAdapter ():
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recycler_view_item, parent, false)
+            .inflate(R.layout.my_work_view_item, parent, false)
 
         return ViewHolder(view)
     }

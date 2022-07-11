@@ -12,7 +12,7 @@ import com.example.github.R
 import com.example.mydiffutil.UserDiffUtilCallback
 import com.github.data.RepositoryElement
 
-class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
+class ViewAdapter() : RecyclerView.Adapter<ViewAdapter.ViewHolder>(){
 
     private var dataSet: List<RepositoryElement> = listOf()
     var onItemClick: ((String) -> Unit)? = null
@@ -39,7 +39,7 @@ class RepoViewAdapter() : RecyclerView.Adapter<RepoViewAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.repos_view_item, parent, false)
+            .inflate(R.layout.trending_feed_view_item, parent, false)
         return ViewHolder(view)
     }
 

@@ -16,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MyWorkFragment : BaseFragment(R.layout.fragment_my_work) {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: MyRepoViewAdapter
+    private lateinit var viewAdapter: ViewAdapter
     private lateinit var ownerNameView: TextView
     private lateinit var ownerLocationView: TextView
     private lateinit var ownerAvatarView: ImageView
@@ -31,7 +31,7 @@ class MyWorkFragment : BaseFragment(R.layout.fragment_my_work) {
         ownerAvatarView = view.findViewById(R.id.user_image)
 
         recyclerView = view.findViewById(R.id.recycler_view)
-        viewAdapter = MyRepoViewAdapter()
+        viewAdapter = ViewAdapter()
         recyclerView.adapter = viewAdapter
 
         val ownerName = arguments?.getString("ownerName")

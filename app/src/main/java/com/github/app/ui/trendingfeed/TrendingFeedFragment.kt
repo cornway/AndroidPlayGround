@@ -11,7 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TrendingFeedFragment : BaseFragment(R.layout.fragment_trending_feed) {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RepoViewAdapter
+    private lateinit var viewAdapter: ViewAdapter
     private val preloadDataThreshold: Int = 60
     private val model: RepositoriesViewModel by viewModel()
 
@@ -30,7 +30,7 @@ class TrendingFeedFragment : BaseFragment(R.layout.fragment_trending_feed) {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.recycler_view_repos)
-        viewAdapter = RepoViewAdapter()
+        viewAdapter = ViewAdapter()
         recyclerView.adapter = viewAdapter
 
         setupListeners()
