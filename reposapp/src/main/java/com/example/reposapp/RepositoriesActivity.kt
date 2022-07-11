@@ -2,20 +2,19 @@ package com.example.reposapp
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.github.R
 import github.domain.viewmodel.RepositoriesViewModel
-import org.koin.core.component.KoinComponent
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RepositoriesActivity : AppCompatActivity(), LiveDataObserveProtocol, KoinComponent {
+class RepositoriesActivity : BaseActivity<RepositoriesViewModel>() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RepoViewAdapter
     private val preloadDataThreshold: Int = 60
     private var requestPending: Boolean = false
-    private lateinit var model: RepositoriesViewModel
+    private val model: RepositoriesViewModel by viewModel()
     //TODO viewModels()
 
     private fun requestDataDone() {
@@ -52,7 +51,6 @@ class RepositoriesActivity : AppCompatActivity(), LiveDataObserveProtocol, KoinC
         recyclerView.adapter = viewAdapter
 
         setupListeners()
-        model = RepositoriesViewModel()
 
         model.requestFeed(viewAdapter.itemCount, 100)
 

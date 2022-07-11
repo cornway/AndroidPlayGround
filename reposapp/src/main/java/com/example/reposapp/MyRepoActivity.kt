@@ -1,6 +1,5 @@
 package com.example.reposapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,18 +8,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.github.R
 import com.example.github.RepoViewElement
-import github.data.repository.RequestRepoFeedRepositoryImpl
-import github.domain.usecase.RequestRepoFeedUseCaseImpl
 import github.domain.viewmodel.RepositoriesViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
-    LiveDataObserveProtocol {
+class MyRepoActivity : BaseActivity<RepositoriesViewModel>(), SwipeRefreshLayout.OnRefreshListener
+     {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MyRepoViewAdapter
 
-    private lateinit var model: RepositoriesViewModel
+    val model: RepositoriesViewModel by viewModel()
 
     private fun requestInfoDone() {
         swipeRefreshLayout.isRefreshing = false
@@ -55,8 +52,6 @@ class MyRepoActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener
         recyclerView = findViewById(R.id.recycler_view)
         viewAdapter = MyRepoViewAdapter()
         recyclerView.adapter = viewAdapter
-
-        model = RepositoriesViewModel()
 
         model.requestPerUser(intent.data.toString())
 

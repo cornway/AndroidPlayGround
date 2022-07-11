@@ -6,9 +6,9 @@ import github.domain.usecase.RequestRepoFeedUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class RepositoriesViewModel: BaseViewModel() {
-
-    private val requestRepoFeedUseCase by inject<RequestRepoFeedUseCase>()
+class RepositoriesViewModel(
+    private val requestRepoFeedUseCase: RequestRepoFeedUseCase
+): BaseViewModel() {
 
     val repositories: MutableLiveData<List<RepoViewElement>> by lazy {
         MutableLiveData<List<RepoViewElement>>()
