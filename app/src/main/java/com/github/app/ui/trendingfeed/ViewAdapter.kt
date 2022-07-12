@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.createSavedStateHandle
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,7 +13,7 @@ import com.example.github.R
 import com.example.mydiffutil.UserDiffUtilCallback
 import com.github.data.RepositoryElement
 
-class ViewAdapter() : RecyclerView.Adapter<ViewAdapter.ViewHolder>(){
+class ViewAdapter : RecyclerView.Adapter<ViewAdapter.ViewHolder>(){
 
     private var dataSet: List<RepositoryElement> = listOf()
     var onItemClick: ((String) -> Unit)? = null
@@ -67,4 +68,5 @@ class ViewAdapter() : RecyclerView.Adapter<ViewAdapter.ViewHolder>(){
     override fun getItemCount(): Int {
         return dataSet.size
     }
+
 }
