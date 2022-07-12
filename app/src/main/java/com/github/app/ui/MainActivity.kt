@@ -12,7 +12,7 @@ import com.github.app.ui.trendingfeed.TrendingFeedFragment
 
 class MainActivity : FragmentActivity() {
     private lateinit var mPager: ViewPager
-    private val NUM_PAGES: Int = 2
+    private val pages = arrayOf(TrendingFeedFragment(), MyWorkFragment())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +33,7 @@ class MainActivity : FragmentActivity() {
 
     private inner class ScreenSlidePagerAdapter(fm: FragmentManager) :
         FragmentStatePagerAdapter(fm) {
-        override fun getCount(): Int = NUM_PAGES
-
-        override fun getItem(position: Int): Fragment =
-            when (position % NUM_PAGES) {
-                0 -> TrendingFeedFragment()
-                else -> MyWorkFragment()
-            }
+        override fun getCount(): Int = pages.size
+        override fun getItem(position: Int): Fragment = pages[position % pages.size]
     }
 }
